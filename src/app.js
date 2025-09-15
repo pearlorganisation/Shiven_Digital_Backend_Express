@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorHandler.js";
 import cookieParser from "cookie-parser";
-import cors from "cors"; 
+import corsConfig from "./config/corsConfig.js"; 
 import routes from "./routes.js";
 
 import successResponse from "./utils/successResponse.js";
@@ -11,11 +11,11 @@ import successResponse from "./utils/successResponse.js";
 dotenv.config();
 
 const app = express();
-
+app.use(corsConfig);
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+
 
 
 app.use("/api/v1", routes);

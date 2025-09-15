@@ -1,2 +1,14 @@
-// auth.route.js - auth module
+import express from "express"
+import validateBody from "../../middleware/parseJOI/validateBody.js" 
+import verifyAccessToken from "../../middleware/auth/verifyAccessToken.js"
 
+import AuthController from "./auth.controller.js"
+import authSchema from "./auth.validator.js"
+
+const router=express.Router()
+
+router.post("/register",validateBody(authSchema.register),AuthController.register)
+router.post("/login",validateBody(authSchema.login),AuthController.login)
+router.get("/me",verifyAccessToken,AuthController.getUserInfo)
+
+export default router;
