@@ -1,4 +1,5 @@
 import express from "express";
+import morgan from "morgan";
 import dotenv from "dotenv";
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorHandler.js";
@@ -8,9 +9,11 @@ import routes from "./routes.js";
 
 import successResponse from "./utils/successResponse.js";
 
+
 dotenv.config();
 
 const app = express();
+app.use(morgan("dev")); 
 app.use(corsConfig);
 
 app.use(express.json());
