@@ -16,7 +16,7 @@ rl.question("Enter module name: ", (moduleName) => {
   }
 
   // Locate src folder (from project root)
-  const srcPath = path.join(process.cwd(), "src");
+  const srcPath = path.join(process.cwd(), "src/modules");
 
   if (!fs.existsSync(srcPath)) {
     console.log("❌ Error: 'src' folder not found in project root!");
