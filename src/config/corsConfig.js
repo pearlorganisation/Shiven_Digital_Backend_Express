@@ -12,6 +12,7 @@ const getAllowedOrigins = () => {
     ];
   } else {
     return [
+      "http://localhost:5173",
       "https://yourdomain.com",
       "https://admin.yourdomain.com", 
     ];
