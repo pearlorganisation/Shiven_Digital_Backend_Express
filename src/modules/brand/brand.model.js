@@ -1,10 +1,9 @@
-// brand.model.js
 import mongoose from "mongoose";
 
 const addressSchema = new mongoose.Schema({
   country: { type: String },
   city: { type: String },
-  location: { type: String }, 
+  location: { type: String },
 });
 
 const socialSchema = new mongoose.Schema({
@@ -17,7 +16,11 @@ const socialSchema = new mongoose.Schema({
 
 const brandSchema = new mongoose.Schema(
   {
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, 
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
 
     name: {
       type: String,
@@ -26,7 +29,7 @@ const brandSchema = new mongoose.Schema(
     },
 
     logo: {
-      type: String, 
+      type: String,
     },
 
     description: {
@@ -46,7 +49,7 @@ const brandSchema = new mongoose.Schema(
         match: [/^\S+@\S+\.\S+$/, "Invalid email address"],
       },
       phone: {
-        type: String, 
+        type: String,
       },
       address: addressSchema,
     },

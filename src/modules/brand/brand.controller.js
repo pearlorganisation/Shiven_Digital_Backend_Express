@@ -8,7 +8,6 @@ import BrandService from "./brand.service.js";
 import MongooseService from "../../utils/commonService/mogoose.service.js";
 
 class BrandController {
-
   //  Create brand
   static createBrand = asyncHandler(async (req, res) => {
     const data = { ...req.body, userId: req.user.id };
@@ -19,7 +18,9 @@ class BrandController {
       throw new CustomError(result.message, 400);
     }
 
-    successResponse(res, MongooseService.cleanObject(result.data.brand), result.message, 201);
+    result.data.brand = MongooseService.cleanObject(result.data.brand);
+
+    successResponse(res, result.data, result.message, 201);
   });
 
   //  Get all brands for logged-in user
@@ -31,7 +32,10 @@ class BrandController {
       throw new CustomError(result.message, 400);
     }
 
-    successResponse(res, MongooseService.cleanObject(result.data.brands), result.message, 200);
+    result.data.brands = result.data.brands.map((brand) =>
+      MongooseService.cleanObject(brand)
+    );
+    successResponse(res, result.data, result.message, 200);
   });
 
   //  Get brand by ID
@@ -43,7 +47,8 @@ class BrandController {
       throw new CustomError(result.message, 404);
     }
 
-    successResponse(res, MongooseService.cleanObject(result.data.brand), result.message, 200);
+    result.data.brand = MongooseService.cleanObject(result.data.brand);
+    successResponse(res, result.data, result.message, 200);
   });
 
   //  Update brand
@@ -57,7 +62,8 @@ class BrandController {
       throw new CustomError(result.message, 404);
     }
 
-    successResponse(res, MongooseService.cleanObject(result.data.brand), result.message, 200);
+    (result.data.brand = MongooseService.cleanObject(result.data.brand)),
+      successResponse(res, result.data, result.message, 200);
   });
 
   //  Delete brand
@@ -70,9 +76,9 @@ class BrandController {
       throw new CustomError(result.message, 404);
     }
 
-    successResponse(res, MongooseService.cleanObject(result.data.brand), result.message, 200);
+    (result.data.brand = MongooseService.cleanObject(result.data.brand)),
+      successResponse(res, result.data, result.message, 200);
   });
-
 }
 
 export default BrandController;

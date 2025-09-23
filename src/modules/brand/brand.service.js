@@ -68,7 +68,7 @@ class BrandService {
       const brand = await Brand.findByIdAndUpdate(
         brandId,
         { ...data, updatedAt: Date.now() },
-        { new: true } 
+        { new: true }
       );
 
       if (!brand) {
