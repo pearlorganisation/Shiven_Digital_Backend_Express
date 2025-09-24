@@ -1,20 +1,15 @@
 import cors from "cors";
 
-// ✅ Function to check if the app is running in development
 const isDev = () => process.env.NODE_ENV === "development";
 
-// ✅ Function to get allowed origins based on environment
 const getAllowedOrigins = () => {
   if (isDev()) {
-    return [
-      "http://localhost:3000",
-      "http://localhost:5173", 
-    ];
+    return ["http://localhost:3000", "http://localhost:5173"];
   } else {
     return [
       "http://localhost:5173",
       "https://yourdomain.com",
-      "https://admin.yourdomain.com", 
+      "https://admin.yourdomain.com",
     ];
   }
 };
@@ -23,7 +18,6 @@ const corsOptions = {
   origin: function (origin, callback) {
     const allowedOrigins = getAllowedOrigins();
 
-    // allow requests with no origin (like curl, Postman)
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
@@ -33,7 +27,7 @@ const corsOptions = {
     }
   },
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  credentials: true, // required for cookies
+  credentials: true,
 };
 
 export default cors(corsOptions);

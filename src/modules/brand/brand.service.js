@@ -26,7 +26,7 @@ class BrandService {
   //  Get all brands for a specific user
   static async getByUserId(userId) {
     try {
-      const brands = await Brand.find({ userId });
+      const brands = await Brand.find({ userId }).sort({ createdAt: -1 });
       return {
         success: true,
         message: "Brands fetched successfully",
