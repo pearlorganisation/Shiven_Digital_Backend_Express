@@ -4,12 +4,11 @@ const isDev = () => process.env.NODE_ENV === "development";
 
 const getAllowedOrigins = () => {
   if (isDev()) {
-    return ["http://localhost:3000", "http://localhost:5173"];
+    return ["http://localhost:5173","http://localhost:4173"];
   } else {
     return [
-      "http://localhost:5173",
-      "https://yourdomain.com",
-      "https://admin.yourdomain.com",
+      "http://chicku.in/",
+      "http://chicku.info",
     ];
   }
 };
