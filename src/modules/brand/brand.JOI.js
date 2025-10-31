@@ -1,16 +1,10 @@
 import Joi from "joi";
 
 class brandSchema {
-
-  //  Create Brand schema
   static createBrand = Joi.object({
-    userId: Joi.string()
-      .regex(/^[0-9a-fA-F]{24}$/) // must be a valid ObjectId
-      .required(),
-
     name: Joi.string().trim().min(2).max(100).required(),
 
-    logo: Joi.string().uri().optional(), 
+    logo: Joi.string().uri().optional(),
 
     description: Joi.string().max(500).optional(),
 
@@ -37,7 +31,6 @@ class brandSchema {
     }).optional(),
   });
 
-  //  Update Brand schema (all fields optional)
   static updateBrand = Joi.object({
     name: Joi.string().trim().min(2).max(100).optional(),
     logo: Joi.string().uri().optional(),

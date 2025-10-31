@@ -46,7 +46,6 @@ const brandSchema = new mongoose.Schema(
         required: true,
         lowercase: true,
         trim: true,
-        match: [/^\S+@\S+\.\S+$/, "Invalid email address"],
       },
       phone: {
         type: String,
@@ -55,9 +54,6 @@ const brandSchema = new mongoose.Schema(
     },
 
     social: socialSchema,
-
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );
