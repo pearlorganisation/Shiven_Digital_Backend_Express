@@ -32,7 +32,7 @@ app.use("/api/v1", routes);
 
 // Root test route
 app.get("/", (req, res) => {
-  successResponse(res, {}, "API is running 🚀 Good With CI/CD pipeline");
+  successResponse(res, {}, "API is running 🚀");
 });
 
 // Redis check route
