@@ -1,9 +1,11 @@
-name: 🚀 Deploy Backend to VPS
+
+
+name: 🚀 Deploy Frontend to VPS
 
 on:
   push:
     branches:
-      - master  # deploy when you push to master
+      - master
 
 jobs:
   deploy:
@@ -16,16 +18,9 @@ jobs:
       - name: 📡 Deploy to VPS via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
-          host: 162.241.87.129
-          username: root
-          key: |
-            -----BEGIN OPENSSH PRIVATE KEY-----
-            b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
-            QyNTUxOQAAACDEzw1qwzHqh2hVrnT6dL9ywMuQgtUL5o6SAcYiBB8a1wAAAJgy6YtRMumL
-            UQAAAAtzc2gtZWQyNTUxOQAAACDEzw1qwzHqh2hVrnT6dL9ywMuQgtUL5o6SAcYiBB8a1w
-            AAAEBiGJQkGoIz4AOrj+wDF9SLBb5znZhGEQowAIoNWBQxtMTPDWrDMeqHaFWudPp0v3LA
-            y5CC1QvmjpIBxiIEHxrXAAAAFWdpdGh1Yi1hY3Rpb25zLXRvLXZwcw==
-            -----END OPENSSH PRIVATE KEY-----
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "🚀 Starting backend deploy script on VPS..."
+            echo "✅ Starting deploy script on VPS..."
             bash /home/chiku/deploy_backend.sh
