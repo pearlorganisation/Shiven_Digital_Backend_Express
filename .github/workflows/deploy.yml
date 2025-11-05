@@ -1,6 +1,4 @@
-
-
-name: 🚀 Deploy Frontend to VPS
+name: 🚀 Deploy Backend to VPS
 
 on:
   push:
@@ -22,5 +20,23 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            echo "✅ Starting deploy script on VPS..."
-            bash /home/chiku/deploy_backend.sh
+            echo "🚀 Starting backend deploy script on VPS..."
+
+            # Load NVM so PM2 and Node become available
+            export NVM_DIR="/root/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+            # Go to backend directory
+            cd /home/chiku/Shiven_Digital_Backend_Express || exit
+
+            echo "🔁 Pulling latest backend changes..."
+            git pull origin master
+
+            echo "📦 Installing dependencies..."
+            npm ci
+
+            echo "🚀 Restarting backend PM2 service..."
+            pm2 restart 2
+
+            echo "✅ Backend deployed successfully!"
