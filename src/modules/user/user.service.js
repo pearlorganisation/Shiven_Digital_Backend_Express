@@ -13,7 +13,28 @@ class UserService {
       }
 
       return { success: true, message: "User found", data: { user } };
+    } catch (error) {
+      return {
+        success: false,
+        message: isDev() ? error.message : "Internal Server Error",
+        data: null,
+      };
+    }
+  }
 
+  static async verifyUserEmail(id) {
+    try {
+      const user = await User.findByIdAndUpdate(
+        id,
+        { isVerified: true },
+        { new: true }
+      );
+
+      if (!user) {
+        return { success: false, message: "User not found", data: null };
+      }
+
+      return { success: true, message: "Email verified", data: { user } };
     } catch (error) {
       return {
         success: false,
@@ -48,7 +69,7 @@ class UserService {
       const hashedPassword = await BcryptService.hashValue(data.password);
       const user = await User.create({ ...data, password: hashedPassword });
 
-      return { success: true, message: "User registered", data: { user } };
+      return { success: true, message: "User registered Successfully", data: { user } };
     } catch (error) {
       return {
         success: false,

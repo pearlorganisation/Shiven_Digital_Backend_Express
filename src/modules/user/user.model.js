@@ -19,23 +19,40 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    password:{
-      type:String,
+    password: {
+      type: String,
       required: true,
     },
+
     role: {
       type: String,
-      enum: ["user","agency","agencyStaff", "admin", "adminStaff"],
+      enum: ["user", "agency", "agencyStaff", "admin", "adminStaff"],
       default: "user",
     },
+
+    adminParentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+
+    agencyParentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
+
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
     isDeleted: {
       type: Boolean,
       default: false,
     },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
 const User = mongoose.model("User", userSchema);

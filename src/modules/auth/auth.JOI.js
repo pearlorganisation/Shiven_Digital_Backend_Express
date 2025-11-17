@@ -9,7 +9,7 @@ class authSchema {
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
     role: Joi.string()
-      .valid("user", "agency", "agencyStaff", "adminStaff").required()
+      .valid("user", "agency",).required()
   });
 
   // 🔐 Login schema

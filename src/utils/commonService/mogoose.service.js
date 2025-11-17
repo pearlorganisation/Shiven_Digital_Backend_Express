@@ -5,49 +5,45 @@ class MongooseService {
     return mongoose.Types.ObjectId.isValid(id);
   }
 
- static cleanObject = (doc) => {
-  if (!doc) return null;
+  static cleanObject = (doc) => {
+    if (!doc) return null;
 
-  const obj = doc.toObject ? doc.toObject() : { ...doc };
+    const obj = doc.toObject ? doc.toObject() : { ...doc };
 
-  const removeFields = [
-    "isDeleted",
-    "createdAt",
-    "updatedAt",
-    "__v",
-    "password",
-  ];
+    const removeFields = [
+      "isDeleted",
+      "createdAt",
+      "updatedAt",
+      "__v",
+      "password",
+    ];
 
-  function deepClean(value, seen = new WeakSet()) {
-    
-    if (value === null || value === undefined) return value;
-    if (typeof value !== "object") return value;
+    function deepClean(value, seen = new WeakSet()) {
+      if (value === null || value === undefined) return value;
+      if (typeof value !== "object") return value;
 
-    
-    if (seen.has(value)) return value;
-    seen.add(value);
+      if (seen.has(value)) return value;
+      seen.add(value);
 
-    if (Array.isArray(value)) {
-      return value.map((item) => deepClean(item, seen));
+      if (Array.isArray(value)) {
+        return value.map((item) => deepClean(item, seen));
+      }
+
+      removeFields.forEach((field) => {
+        if (field in value) {
+          delete value[field];
+        }
+      });
+
+      Object.keys(value).forEach((key) => {
+        value[key] = deepClean(value[key], seen);
+      });
+
+      return value;
     }
 
-    
-    removeFields.forEach((field) => {
-      if (field in value) {
-        delete value[field];
-      }
-    });
-
-    Object.keys(value).forEach((key) => {
-      value[key] = deepClean(value[key], seen);
-    });
-
-    return value;
-  }
-
-  return deepClean(obj);
-};
-
+    return deepClean(obj);
+  };
 }
 
 export default MongooseService;
