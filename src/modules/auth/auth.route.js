@@ -13,7 +13,7 @@ router.post("/register",validateBody(authSchema.register),AuthController.registe
 router.post("/login",validateBody(authSchema.login),AuthController.login)
 
 router.get("/me",verifyAccessToken,AuthController.getUserInfo)
-router.post("/refresh",verifyRefreshToken,AuthController.refreshToken)
+router.post("/refresh-token",verifyRefreshToken,AuthController.refreshToken)
 router.post("/logout",verifyRefreshToken,AuthController.logout)
 router.get("/verify-email",AuthController.verifyEmail)
 

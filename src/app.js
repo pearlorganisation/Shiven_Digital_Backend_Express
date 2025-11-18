@@ -35,6 +35,7 @@ app.get("/", (req, res) => {
   successResponse(res, {}, "API is running 🚀");
 });
 
+
 // Redis check route
 app.get("/redis-check", async (req, res, next) => {
   try {

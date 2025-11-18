@@ -98,7 +98,8 @@ class AuthController {
     // Check if user is verified
     if (!user.isVerified) {
       const existingToken = await redis.get(`registerToken:${user._id}`);
-
+  
+      
       if (existingToken) {
         return successResponse(
           res,
@@ -108,27 +109,27 @@ class AuthController {
         );
       } else {
         // Generate a new register token
-        const token = await TokenService.generateRegisterToken(user._id);
+        const token = await TokenService.generateRegisterToken(user._id)
 
         // Send verification email
         const html = emailVerificationTemplate({
           firstName: user.firstName,
           appName: "Chicku",
           verifyLink: `${process.env.BACKEND_URL}/auth/verify-email?userId=${user._id}&token=${token}`,
-        });
+        })
 
         await EmailService.send({
           to: user.email,
           subject: "Verify Your Email Address",
           html,
-        });
+        })
 
         return successResponse(
           res,
           null,
           "Verification email sent. Please check your inbox.",
           200
-        );
+        )
       }
     }
 

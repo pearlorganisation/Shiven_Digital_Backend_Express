@@ -9,7 +9,9 @@ class TokenService {
     }
     const token = crypto.randomBytes(32).toString("hex");
 
-    await redis.set(`registerToken:${userId}`, token, "EX", 900);
+    await redis.set(`registerToken:${userId}`, token,{
+      EX:9
+    });
 
     return token;
   }
