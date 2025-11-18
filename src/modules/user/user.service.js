@@ -69,7 +69,7 @@ class UserService {
       const hashedPassword = await BcryptService.hashValue(data.password);
       const user = await User.create({ ...data, password: hashedPassword });
 
-      return { success: true, message: "User registered Successfully", data: { user } };
+      return { success: true, message: "Account created. Please verify your email.", data: { user } };
     } catch (error) {
       return {
         success: false,

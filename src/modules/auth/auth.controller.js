@@ -20,6 +20,13 @@ class AuthController {
   static register = asyncHandler(async (req, res) => {
     const { firstName, lastName, email, password, role } = req.body;
 
+    const existing =await UserService.findByEmail(email);
+    
+    if(existing.success){
+      throw new CustomError("User Already Exist",400)
+    }
+
+
     const result = await UserService.register({
       firstName,
       lastName,
@@ -35,8 +42,6 @@ class AuthController {
     const user = result.data.user;
 
     const token = await TokenService.generateRegisterToken(user._id);
-
-    
 
     const html = emailVerificationTemplate({
       firstName: user.firstName,
@@ -56,13 +61,12 @@ class AuthController {
   static verifyEmail = async (req, res) => {
     const { userId, token } = req.query;
 
-
     if (!userId || !token) {
       return res.send(INVALID_LINK_HTML);
     }
 
     const tokenValid = await TokenService.verifyRegisterToken(userId, token);
-    
+
     if (!tokenValid) {
       return res.send(INVALID_LINK_HTML);
     }
@@ -78,26 +82,68 @@ class AuthController {
     return res.send(SUCCESS_VERIFICATION_HTML(firstName));
   };
 
+
+  //Controller for login
   static login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
     const userResult = await UserService.findByEmail(email);
 
     if (!userResult.success) {
-      throw new CustomError(result.message, 400);
+      throw new CustomError(userResult.message, 400);
     }
 
-    const hashPassword = userResult.data.user.password;
+    const user = userResult.data.user;
+
+    // Check if user is verified
+    if (!user.isVerified) {
+      const existingToken = await redis.get(`registerToken:${user._id}`);
+
+      if (existingToken) {
+        return successResponse(
+          res,
+          null,
+          "Verification email already sent. Please check your inbox.",
+          200
+        );
+      } else {
+        // Generate a new register token
+        const token = await TokenService.generateRegisterToken(user._id);
+
+        // Send verification email
+        const html = emailVerificationTemplate({
+          firstName: user.firstName,
+          appName: "Chicku",
+          verifyLink: `${process.env.BACKEND_URL}/auth/verify-email?userId=${user._id}&token=${token}`,
+        });
+
+        await EmailService.send({
+          to: user.email,
+          subject: "Verify Your Email Address",
+          html,
+        });
+
+        return successResponse(
+          res,
+          null,
+          "Verification email sent. Please check your inbox.",
+          200
+        );
+      }
+    }
+
+    // Continue with normal login
+    const hashPassword = user.password;
     const result = await UserService.login({ password, hashPassword });
 
     if (!result.success) {
       throw new CustomError(result.message, 400);
     }
 
-    result.data.user = MongooseService.cleanObject(userResult.data.user);
+    result.data.user = MongooseService.cleanObject(user);
 
-    const userId = result.data.user._id;
-    const tokens = JwtService.generateTokens(result.data.user);
+    const userId = user._id;
+    const tokens = JwtService.generateTokens(user);
 
     await redis.set(
       `refresh:${userId}`,
