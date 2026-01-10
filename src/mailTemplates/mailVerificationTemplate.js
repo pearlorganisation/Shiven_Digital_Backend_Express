@@ -113,10 +113,6 @@ const emailVerificationTemplate = ({ firstName, appName, verifyLink }) => {
     </style>
   </head>
   <body>
-    <!--
-      GMAIL COMPATIBILITY WRAPPER
-      This table acts as the new "body" of the email to ensure the background color is displayed correctly in Gmail.
-    -->
     <table
       class="email-wrapper dark-mode-wrapper"
       width="100%"
@@ -138,6 +134,11 @@ const emailVerificationTemplate = ({ firstName, appName, verifyLink }) => {
                 firstName || "there"
               }, thanks for signing up! Please click the button below to confirm your email and activate your account.
             </p>
+
+            <p class="dark-mode-text-secondary">
+            ⏱️ <strong>This verification link is valid for 30 minutes.</strong><br />
+            If the link expires, simply log in again and we’ll automatically send you a new verification email.
+          </p>
 
             <a href="${verifyLink}" class="verify-button dark-mode-button" target="_blank">
               Verify Email

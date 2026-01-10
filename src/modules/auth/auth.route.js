@@ -4,7 +4,7 @@ import verifyAccessToken from "../../middleware/auth/verifyAccessToken.js"
 import verifyRefreshToken from "../../middleware/auth/verifyRefreshToken.js"
 
 import AuthController from "./auth.controller.js"
-import authSchema from "./auth.JOI.js"
+import authSchema from "./auth.schema.js" 
 
 const router=express.Router()
 

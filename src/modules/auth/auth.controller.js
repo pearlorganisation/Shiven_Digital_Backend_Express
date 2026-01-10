@@ -17,6 +17,7 @@ import {
 } from "./html.response.js";
 
 class AuthController {
+  
   static register = asyncHandler(async (req, res) => {
     const { firstName, lastName, email, password, role } = req.body;
 
