@@ -9,7 +9,7 @@ const router = express.Router();
 
 
 router.use("/auth",authRoutes)
-router.use
+
 
 // Brand routes
 router.use("/brands", brandRoutes); 

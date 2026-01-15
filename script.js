@@ -44,7 +44,7 @@ rl.question("Enter module name: ", (moduleName) => {
     `${moduleName}.controller.js`,
     `${moduleName}.route.js`,
     `${moduleName}.service.js`,
-    `${moduleName}.JOI.js`,
+    `${moduleName}.schema.js`,
   ];
 
   // Create each file with boilerplate comment
