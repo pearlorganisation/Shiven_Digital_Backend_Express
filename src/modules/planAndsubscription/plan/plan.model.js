@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
+import { uppercase } from "zod";
 
-
-const priceType  = {
-  type: Number, 
-  min: 0 
-
-}
 
 const planSchema = new mongoose.Schema(
   {
@@ -13,7 +8,8 @@ const planSchema = new mongoose.Schema(
       type: String,
       required: [true, "Plan name is required"],
       trim: true,
-      unique: true, 
+      uppercase: true,
+      unique: true,
     },
     slug: {
       type: String,
@@ -21,27 +17,43 @@ const planSchema = new mongoose.Schema(
       unique: true,
       lowercase: true,
     },
-    description: { 
+    description: {
       type: String,
-      trim: true 
+      trim: true,
     },
-   price: {
-  monthly: priceType,
 
-  quarterly: priceType,
+    price: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    discountType: {
+      type: String,
+      enum: ["flat", "percentage"],
+      default: null,
+    },
 
-  halfYearly: priceType,
+    // Discount Amount
+    discountAmount: {
+      type: Number,
+      min: 0,
+      default: 0,
+    },
 
-  yearly: priceType
-},
-    currency: { 
-      type: String, 
+    durationDays: {
+      type: Number,
+      required: true,
+      min: 1,
+    },
+
+    currency: {
+      type: String,
       default: "INR",
-      uppercase: true
+      uppercase: true,
     },
     trialDays: {
       type: Number,
-      default: 0, 
+      default: 0,
     },
 
     // Module 1 & 14: Limits for the SaaS Platform
@@ -60,31 +72,22 @@ const planSchema = new mongoose.Schema(
       premiumTemplates: { type: Boolean, default: false },
       advancedAnalytics: { type: Boolean, default: false },
       apiAccess: { type: Boolean, default: false },
-      removeBranding: { type: Boolean, default: false }, // Common SaaS feature
+      removeBranding: { type: Boolean, default: false },
     },
 
-    isActive: { 
-      type: Boolean, 
-      default: true 
+    isActive: {
+      type: Boolean,
+      default: true,
     },
-    
+
     // For sorting plans on the UI (e.g., Basic -> Pro -> Enterprise)
     sortOrder: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   { timestamps: true }
 );
-
-planSchema.path("price").validate(function (value) {
-  return (
-    value?.monthly ||
-    value?.quarterly ||
-    value?.halfYearly ||
-    value?.yearly
-  );
-}, "At least one pricing option is required");
 
 
 planSchema.pre("save", function (next) {
@@ -96,6 +99,16 @@ planSchema.pre("save", function (next) {
     .replace(/[^\w\s-]/g, "") // Remove non-word chars
     .replace(/[\s_-]+/g, "-") // Replace spaces with -
     .replace(/^-+|-+$/g, ""); // Trim -
+
+    if (this.discountType && !this.discountAmount) {
+        return next(
+          new Error("Discount amount is required when discount type is set")
+        );
+      }
+
+      if (!this.discountType) {
+        this.discountAmount = 0;
+      }
 
   next();
 });
