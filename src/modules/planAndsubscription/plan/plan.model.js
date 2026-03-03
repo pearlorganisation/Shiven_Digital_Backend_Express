@@ -44,7 +44,6 @@ const planSchema = new mongoose.Schema(
       default: 0, 
     },
 
-    // Module 1 & 14: Limits for the SaaS Platform
     limits: {
       maxUsers: { type: Number, default: 1 },
       maxSocialAccounts: { type: Number, default: 3 },
@@ -96,6 +95,21 @@ planSchema.pre("save", function (next) {
     .replace(/[^\w\s-]/g, "") // Remove non-word chars
     .replace(/[\s_-]+/g, "-") // Replace spaces with -
     .replace(/^-+|-+$/g, ""); // Trim -
+
+  next();
+});
+
+planSchema.pre("findOneAndUpdate", function (next) {
+  const update = this.getUpdate();
+
+  if (update.name) {
+    update.slug = update.name
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+  }
 
   next();
 });
