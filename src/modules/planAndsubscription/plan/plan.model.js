@@ -1,38 +1,47 @@
 import mongoose from "mongoose";
 
+
+const priceType  = {
+  type: Number, 
+  min: 0 
+
+}
+
 const planSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: [true, "Plan name is required"],
       trim: true,
-      unique: true, // Prevent duplicate plan names
+      unique: true, 
     },
     slug: {
       type: String,
       trim: true,
       unique: true,
       lowercase: true,
-      // We will auto-generate this, so it's not required in the request body
     },
     description: { 
       type: String,
       trim: true 
     },
-    price: {
-      monthly: { type: Number, required: true, min: 0 },
-      yearly: { type: Number, required: true, min: 0 },
-    },
+   price: {
+  monthly: priceType,
+
+  quarterly: priceType,
+
+  halfYearly: priceType,
+
+  yearly: priceType
+},
     currency: { 
       type: String, 
       default: "INR",
       uppercase: true
     },
-    
-    // Module 2 Requirement: Free Trials
     trialDays: {
       type: Number,
-      default: 0, // 0 means no trial, 7 or 14 means free trial
+      default: 0, 
     },
 
     // Module 1 & 14: Limits for the SaaS Platform
@@ -67,6 +76,15 @@ const planSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+planSchema.path("price").validate(function (value) {
+  return (
+    value?.monthly ||
+    value?.quarterly ||
+    value?.halfYearly ||
+    value?.yearly
+  );
+}, "At least one pricing option is required");
 
 
 planSchema.pre("save", function (next) {
